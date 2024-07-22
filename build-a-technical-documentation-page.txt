@@ -1,0 +1,334 @@
+** start of undefined **
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+    <title>Laravel Technical Documentation</title>
+  </head>
+<body>
+  <nav id="navbar">
+    <header id="title">Laravel Documentation</header>
+    <ul id="menu">
+      <li><a class="nav-link" href="#introduction">Introduction</a></li>
+      <li><a class="nav-link" href="#basic_concepts">Basic Concepts</a></li>
+      <li><a class="nav-link" href="#views_and_templating">Views and Templating</a></li>
+      <li><a class="nav-link" href="#database">Database</a></li>
+      <li><a class="nav-link" href="#advanced_features">Advanced Features</a></li>
+      <li><a class="nav-link" href="#testing_and_deployment">Testing and Deployment</a></li>
+      
+    </ul>
+  </nav>
+
+  <main id="main-doc">
+    <section class="main-section" id="introduction">
+      <header>Introduction</header>
+      <h3>Overview of Laravel</h3>
+      <p>
+        Laravel is a web application framework with an expressive, elegant syntax. It aims to make the development process a pleasing one for the developer without sacrificing application functionality. Laravel eases common tasks like routing, authentication, sessions, and caching, providing a clean, enjoyable development environment.
+        </p>
+      <h3>Installation and Setup</h3>
+      <p>
+        To get started with Laravel, you need to have Composer installed. Then, you can create a new Laravel project using the following command:
+        <br>
+        <br>
+        <div class="code"><pre><code>composer create-project --prefer-dist laravel/laravel myProject</code></pre></div>
+        
+
+        <br>
+Navigate to your project directory:
+ 
+        <br>
+<div class="code"><pre><code>cd myProject</code></pre></div>
+
+        <br>
+Serve the application:
+
+        <br>
+
+<div class="code"><pre><code>php artisan serve</code></pre>
+      </p>
+    </section>
+    <section class="main-section" id="basic_concepts">
+      <header>Basic Concepts</header>
+      <h3>Routing</h3>
+      <p>In Laravel, routing is simple and expressive. All  routes are defined in the `routes/web.php` file. A basic route that returns a view can be defined as follows:</p>
+
+     <div class="code"> 
+       <pre><code>Route::get('/', function () {
+          return view('welcome');
+      });</code></pre>
+      </div>
+
+      <p>This route listens for HTTP GET requests to the root URL ("/") and returns the `welcome` view.</p>
+      <h3>Middleware</h3>
+      <p>Middleware provides a convenient mechanism for filtering HTTP requests entering your application. For example, Laravel includes a middleware that verifies the user of your application is authenticated.</p>
+
+      <p>To register middleware, add it to the `$routeMiddleware` array in the `app/Http/Kernel.php` file:</p>
+
+     <div class="code"> <pre><code>protected $routeMiddleware = [
+          'auth' => \App\Http\Middleware\Authenticate::class,
+      ];</code></pre>
+      </div>
+
+      <p>Once the middleware has been defined, it can be assigned to routes using the `middleware` method:</p>
+
+      <div class="code"><pre><code>Route::get('/profile', function () {
+          // Only authenticated users may enter...
+      })->middleware('auth');</code></pre>
+      </div>
+
+      <h3>Controllers</h3>
+      <p>Controllers can group related route logic into a class. They are stored in the `app/Http/Controllers` directory. You can create a new controller using the Artisan command-line utility:</p>
+
+     <div class="code"> <pre><code>php artisan make:controller UserController</code></pre>
+     </div>
+
+      <p>Once the controller has been created, you can define methods within the controller and assign routes to these methods:</p>
+
+      <div class="code"><pre><code>Route::get('/user', [UserController::class, 'index']);</code></pre>
+      </div>
+
+      </section>
+
+    <section class="main-section" id="views_and_templating">
+      <header>Views and Templating</header>
+      <h3>Blade Templating Engine</h3>
+      <p>Blade is Laravel's powerful templating engine. It allows you to use plain PHP code in your templates and provides convenient short-cuts. An example of a Blade view might look like this:</p>
+      <div class="code">
+        <pre><code>&lt;!DOCTYPE html&gt;
+      &lt;html&gt;
+      &lt;head&gt;
+          &lt;title&gt;Laravel&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+          &lt;h1&gt;Hello, {{ $name }}&lt;/h1&gt;
+      &lt;/body&gt;
+      &lt;/html&gt;</code></pre>
+      </div>
+      <p>In this example, the Blade syntax `{{ $name }}` is used to echo out a variable's value.</p>
+      <h3>Layouts and Sections</h3>
+      <p>Layouts allow you to define a master page that can be extended by other views. A layout file might look like this:</p>
+      <div class="code">
+        <pre><code>&lt;!DOCTYPE html&gt;
+      &lt;html&gt;
+      &lt;head&gt;
+          &lt;title&gt;App Name - @yield('title')&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+          @yield('content')
+      &lt;/body&gt;
+      &lt;/html&gt;</code></pre>
+      </div>
+      <p>To extend this layout in another view, you can use the `@extends` and `@section` directives:</p>
+      <div class="code"><pre><code>@extends('layouts.app')
+
+      @section('title', 'Page Title')
+
+      @section('content')
+          &lt;p&gt;This is my body content.&lt;/p&gt;
+      @endsection</code></pre>
+      </div>
+      </section>
+
+    <section class="main-section" id="database">
+      <header>Database</header>
+      <h3>Eloquent ORM</h3>
+      <p>Eloquent provides a beautiful, simple ActiveRecord implementation for working with your database. Defining an Eloquent model is straightforward:</p>
+      <div class="code">
+        <pre><code>php artisan make:model User</code></pre>
+        </div>
+      <p>Once the model is defined, you can use it to interact with the corresponding database table. For example, to fetch all users:</p>
+      <div class="code"><pre><code>$users = App\Models\User::all();</code></pre>
+      </div>
+      <p>This retrieves all records from the `users` table and returns them as a collection of User objects.</p>
+            <h3>Migrations</h3>
+            <p>Migrations are like version control for your database, allowing your team to define and share the application's database schema definition. To create a new migration, use the following command:</p>
+            <div class="code"><pre><code>php artisan make:migration create_users_table</code></pre>
+            </div>
+            <p>After defining your migration, run it to apply the changes to the database:</p>
+            <div class="code"><pre><code>php artisan migrate</code></pre>
+            </div>
+      </section>
+
+    <section class="main-section" id="advanced_features">
+      <header>Advanced Features</header>
+      <h3>Authentication</h3>
+      <p>Laravel provides a quick way to scaffold the authentication system. You can generate the authentication scaffolding using the Laravel UI package:</p>
+      <div class="code"><pre><code>composer require laravel/ui
+      php artisan ui vue --auth
+      npm install && npm run dev</code></pre>
+      </div>
+      <p>This command will create the necessary authentication views and routes.</p>
+      <h3>Task Scheduling</h3>
+      <p>Task scheduling in Laravel allows you to schedule tasks to be run at specified times. You can define your command schedule in the `app/Console/Kernel.php` file:</p>
+      <div class="code">
+        <pre><code>$schedule->command('emails:send')->daily();</code></pre>
+        </div>
+      <p>This example schedules the `emails:send` command to run daily.</p>
+      </section>
+
+    <section class="main-section" id="testing_and_deployment">
+      <header>Testing and Deployment</header>
+      <h3>Unit Testing</h3> 
+      <p>Laravel provides a great testing environment out of the box. You can write and run tests using PHPUnit. To create a new test, use the following command:</p>
+      <div class="code">
+        <pre><code>php artisan make:test ExampleTest</code></pre>
+      </div>
+      <p>This will create a new test file in the `tests/Feature` directory. To run your tests, use the following command:</p>
+      <div class="code">
+        <pre><code>phpunit</code></pre>
+        </div>
+      <h3>Configuration</h3> 
+      <p>Before deploying your Laravel application, make sure to set your environment variables correctly in the `.env` file. Important settings include database credentials, mail server settings, and application debug mode.</p>
+      <h3>Deployment Strategies</h3> 
+      <p>Deploying Laravel applications typically involves setting up a web server, database, and ensuring that the correct permissions are set. Commonly used tools include Laravel Forge and Envoyer for automated deployment and server management.</p>
+      <p>Here are some key steps for deployment:</p>
+      <ul>
+          <li>Set up your web server (e.g., Nginx or Apache).</li>
+          <li>Configure your database and update your `.env` file.</li>
+          <li>Run migrations to set up the database schema.</li>
+          <li>Ensure proper file permissions for the storage and cache directories.</li>
+          <li>Use a tool like Laravel Forge or Envoyer for automated deployment and management.</li>
+      </ul>
+      </section>
+      
+      <footer><address>Created by Chris Ferguson<br>Hertford, UK</footer>
+    </footer>
+  </main>
+  </body>
+  </html>
+
+** end of undefined **
+
+** start of undefined **
+
+header{
+  font-size:32;
+  font-weight:bold;
+  color:#2a2a40;
+  margin:3rem 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+body{
+ font-family:Helvetica, Sans-Serif;
+  background-color:#dfdfe2;
+  margin:0;
+}
+
+html,body{
+  color:#3b3b4f;
+  min-width:290px;
+  line-height: 1.5;
+  width:100%;
+  margin:0
+}
+
+#navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  background-color:#0a0a23 ;
+  width:300px;
+  height:100%;
+  color:#fff;
+}
+
+#menu a{
+  text-decoration:none;
+  color:#fff;
+}
+
+#title{
+  color:#cc2900;
+  text-align:center;
+  margin-top:15px;
+}
+
+#nav-link{
+  padding-bottom:15px;
+}
+
+#navbar li{
+
+  border-top:2px solid #2a2a40;
+  width:80%;
+  font-size:18;
+  line-height:2.5;
+  position:relative;
+  padding-left:25px;
+}
+
+#navbar ul{
+  list-style: none;
+  padding: 0;
+  align-items: center;
+}
+
+
+#main-doc {
+margin-left: 300px;
+  padding: 0px;
+}
+
+#main-doc > *:not(footer) {
+  
+  margin-bottom: 110px;
+  width:80%;
+  margin-left: auto; /* Adjusted to keep content centered */
+  margin-right: auto;
+}
+
+p{
+    display:block;
+    margin: 15px;
+    width:95%;
+    font-size: 1em;
+  }
+
+section {
+  margin-bottom: 50px;
+  width: 100%;
+}
+
+.code {
+    background:#3b3b4f;
+    width:80%;
+    color:#d0d0d5;
+    margin: 20px auto;
+    padding:1px 10px;
+    border-radius:5px;
+}
+
+footer{
+  background-color:#2a2a40;
+  justify-content:center;
+  text-align:center;
+  width:100%;
+  margin:0   ;
+  padding:0 0 0 10px;
+  color:#fff;
+  position:relative;
+  left:0;
+  bottom:0;
+  display:flex;
+  z-index:-1;
+}
+
+@media (max-width: 768px) {
+  .main-section {
+    width: 358px;
+  }
+  }
+  
+
+** end of undefined **
+
